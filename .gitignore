@@ -1,0 +1,7 @@
+node_modules/
+dist/
+coverage/
+.env
+*.log
+atlas-credentials.env
+.env.example

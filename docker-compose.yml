@@ -1,0 +1,20 @@
+services:
+  api:
+    build: .
+    command: ["node", "dist/server.js"]
+    env_file: .env
+    environment: { MONGODB_URI: mongodb://mongo:27017/webaudit }
+    ports: ["3000:3000"]
+    depends_on:
+      mongo: { condition: service_healthy }
+    restart: unless-stopped
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: ["ALL"]
+    shm_size: 1gb
+  mongo:
+    image: mongo:8
+    volumes: ["mongo-data:/data/db"]
+    healthcheck: { test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"], interval: 5s, timeout: 3s, retries: 20 }
+    restart: unless-stopped
+volumes:
+  mongo-data:
